@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# Hardhat build artifacts
+artifacts/
+cache/
+
+# Hardhat Ignition deployments
+ignition/deployments/
+
+# Deployment output files (generated during deployment)
+deployment.json
+deployedAddresses.json
+
+# Typechain (if ever enabled)
+typechain/
+typechain-types/
+
+# Coverage output (solidity-coverage)
+coverage/
+coverage.json
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
