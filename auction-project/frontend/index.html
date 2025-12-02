@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>AuctionHouse – Web3 Auction</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Blockchain Auction House</h1>
+<button id="connect">Connect Wallet</button>
+
+<h2>Create Auction</h2>
+<input id="itemName" placeholder="Item name">
+<input id="itemDesc" placeholder="Item description">
+<input id="startPrice" placeholder="Start price in ETH">
+<input id="duration" placeholder="Duration in seconds">
+<button id="createAuction">Create Auction</button>
+
+<h2>Available Auctions</h2>
+<div id="auctionList"></div>
+
+<script src="main.js"></script>
+</body>
+</html>
