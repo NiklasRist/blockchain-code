@@ -2,7 +2,10 @@
 <html>
 <head>
   <title>AuctionHouse – Web3 Auction</title>
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.min.js"></script>
+
+  <!-- IMPORTANT: Load ethers BEFORE main.js -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,6 +23,8 @@
 <h2>Available Auctions</h2>
 <div id="auctionList"></div>
 
+<!-- Load our app logic -->
 <script src="main.js"></script>
+
 </body>
 </html>

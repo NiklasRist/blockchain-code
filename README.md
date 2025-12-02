@@ -109,6 +109,7 @@ npx hardhat run scripts/deployAuctionHouse.js --network sepolia
 cd frontend
 npx http-server .
 ```
+Please only access it under http://127.0.0.1:8080/ to not break the application.
 
 ## Smart Contract Documentation
 
