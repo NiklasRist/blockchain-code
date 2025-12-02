@@ -103,6 +103,13 @@ npx hardhat run scripts/deployAuctionHouse.js --network sepolia
 
 ---
 
+### Frontend
+
+```
+cd frontend
+npx http-server .
+```
+
 ## Smart Contract Documentation
 
 # AuctionHouse.sol
