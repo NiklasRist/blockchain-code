@@ -34,9 +34,6 @@ describe("Auction System", function () {
     };
   }
 
-  // -------------------------------------------------------------
-  // AuctionHouse Tests
-  // -------------------------------------------------------------
   describe("AuctionHouse", function () {
     it("creates a new auction with correct parameters", async () => {
       const { auctionId, auctionAddress } = await createAuction();
@@ -52,9 +49,6 @@ describe("Auction System", function () {
     });
   });
 
-  // -------------------------------------------------------------
-  // Auction Tests
-  // -------------------------------------------------------------
   describe("Auction", function () {
     it("enforces starting price", async () => {
       const { auctionAddress } = await createAuction();
@@ -155,22 +149,18 @@ describe("Auction System", function () {
       const { auctionAddress } = await createAuction();
       const auction = Auction.attach(auctionAddress);
 
-      // Zeit vorspulen
       await ethers.provider.send("evm_increaseTime", [61]);
       await ethers.provider.send("evm_mine");
 
-      // Bieten nicht mehr erlaubt
       await expect(
         auction.connect(bidder1).bid({ value: ethers.utils.parseEther("0.1") })
       ).to.be.revertedWith("Auction ended");
 
-      // Only seller may end
       await expect(auction.connect(bidder1).end())
         .to.be.revertedWith("Not seller");
 
-      // Seller ends successfully
       await auction.connect(seller).end();
-      expect(await auction.state()).to.equal(1); // State.Ended
+      expect(await auction.state()).to.equal(1); 
     });
 
     it("seller can cancel only if no bids", async () => {

@@ -57,13 +57,6 @@ async function main() {
   const refund1 = await auction.refunds(bidder1.address);
   console.log("Refund bidder1:", ethers.utils.formatEther(refund1), "ETH");
 
-  // Optional: End the auction (if time expired or endAt=0 for test)
-  /*
-  console.log("\n--- Ending Auction ---");
-  await auction.connect(seller).end();
-  console.log("Auction ended");
-  */
-
   console.log("\nDemo completed.\n");
 }
 

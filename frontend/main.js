@@ -1,6 +1,3 @@
-// -------------------------------
-// GLOBALS
-// -------------------------------
 let provider;
 let signer;
 
@@ -11,9 +8,6 @@ let auctionHouseAbi = null;
 let auctionAbi = null;
 
 
-// -------------------------------
-// LOAD ABIs
-// -------------------------------
 async function loadAbis() {
   try {
     auctionHouseAbi = await fetch("./auctionHouseABI.json").then(r => r.json());
@@ -25,10 +19,6 @@ async function loadAbis() {
 }
 loadAbis();
 
-
-// -------------------------------
-// CONNECT METAMASK
-// -------------------------------
 document.getElementById("connect").onclick = async () => {
   if (typeof window.ethereum === "undefined") {
     alert("MetaMask not installed! Please install MetaMask.");
@@ -53,9 +43,6 @@ document.getElementById("connect").onclick = async () => {
 };
 
 
-// -------------------------------
-// CREATE AUCTION
-// -------------------------------
 document.getElementById("createAuction").onclick = async () => {
   if (!auctionHouseAbi) return alert("ABIs not loaded yet!");
 
@@ -82,10 +69,6 @@ document.getElementById("createAuction").onclick = async () => {
   }
 };
 
-
-// -------------------------------
-// LOAD AUCTIONS
-// -------------------------------
 async function loadAuctions() {
   if (!auctionHouseAbi) return;
 
@@ -124,10 +107,6 @@ async function loadAuctions() {
   }
 }
 
-
-// -------------------------------
-// BID
-// -------------------------------
 window.bid = async function(address) {
   const amount = prompt("Bid amount in ETH:");
 
@@ -144,10 +123,6 @@ window.bid = async function(address) {
   }
 };
 
-
-// -------------------------------
-// WITHDRAW REFUND
-// -------------------------------
 window.withdrawRefund = async function(address) {
   const auction = new ethers.Contract(address, auctionAbi, signer);
 
@@ -162,10 +137,6 @@ window.withdrawRefund = async function(address) {
   }
 };
 
-
-// -------------------------------
-// END AUCTION
-// -------------------------------
 window.endAuction = async function(address) {
   const auction = new ethers.Contract(address, auctionAbi, signer);
 

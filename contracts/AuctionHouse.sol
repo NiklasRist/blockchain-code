@@ -5,7 +5,6 @@ import "./Auction.sol";
 
 contract AuctionHouse {
 
-    // Jede Auction wird sauber gespeichert
     struct AuctionInfo {
         address auctionAddress;
         address seller;
@@ -16,7 +15,6 @@ contract AuctionHouse {
 
     AuctionInfo[] public auctions;
 
-    // Events
     event AuctionCreated(
         uint256 indexed auctionId,
         address indexed auctionAddress,
@@ -41,7 +39,6 @@ contract AuctionHouse {
     {
         auctionId = auctions.length; // aktuelle Länge = neue ID
 
-        // Auction erzeugen — jetzt mit ID und AuctionHouse-Adresse
         Auction auction = new Auction(
             msg.sender,
             _itemName,
@@ -54,7 +51,6 @@ contract AuctionHouse {
 
         auctionAddress = address(auction);
 
-        // Speichern im Array
         auctions.push(
             AuctionInfo({
                 auctionAddress: auctionAddress,

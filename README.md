@@ -167,7 +167,7 @@ Tracks refunds for prior highest bidder.
 
 ### withdrawRefund()
 
-Allows losing bidders to retrieve their funds.
+Allows losing bidders, also bidders that overbid themselves, to retrieve their already paid funds.
 
 ### end()
 

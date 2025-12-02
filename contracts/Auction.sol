@@ -74,10 +74,8 @@ contract Auction {
     function bid() external payable active {
         require(msg.sender != seller, "Seller cannot bid");
 
-        // Enforce minimum starting price
         require(msg.value >= startingPrice, "Bid too low");
 
-        // Prevent lower bids
         require(msg.value > highestBid, "Bid too low");
 
         if (highestBidder != address(0)) {
