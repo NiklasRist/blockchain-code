@@ -50,18 +50,6 @@ describe("Auction System", function () {
       expect(info.seller).to.equal(seller.address);
       expect(info.startingPrice).to.equal(ethers.utils.parseEther("0.1"));
     });
-
-    it("allows users to subscribe", async () => {
-      await auctionHouse.connect(bidder1).subscribe();
-      expect(await auctionHouse.isSubscriber(bidder1.address)).to.be.true;
-    });
-
-    it("prevents duplicate subscriptions", async () => {
-      await auctionHouse.connect(bidder1).subscribe();
-      await expect(
-        auctionHouse.connect(bidder1).subscribe()
-      ).to.be.revertedWith("already subscribed");
-    });
   });
 
   // -------------------------------------------------------------
@@ -76,7 +64,7 @@ describe("Auction System", function () {
         auction.connect(bidder1).bid({
           value: ethers.utils.parseEther("0.05"),
         })
-      ).to.be.revertedWith("below start price");
+      ).to.be.revertedWith("Bid too low");
     });
 
     it("accepts a valid first bid", async () => {
@@ -105,7 +93,7 @@ describe("Auction System", function () {
         auction.connect(bidder2).bid({
           value: ethers.utils.parseEther("0.1"),
         })
-      ).to.be.revertedWith("bid too low");
+      ).to.be.revertedWith("Bid too low");
     });
 
     it("tracks refunds for outbid users", async () => {
@@ -160,24 +148,29 @@ describe("Auction System", function () {
         auction.connect(seller).bid({
           value: ethers.utils.parseEther("0.3"),
         })
-      ).to.be.revertedWith("seller cannot bid");
+      ).to.be.revertedWith("Seller cannot bid");
     });
 
     it("allows seller to end after time", async () => {
       const { auctionAddress } = await createAuction();
       const auction = Auction.attach(auctionAddress);
 
+      // Zeit vorspulen
       await ethers.provider.send("evm_increaseTime", [61]);
       await ethers.provider.send("evm_mine");
 
-      await expect(auction.connect(bidder1).bid({ value: 1 }))
-        .to.be.revertedWith("auction ended");
+      // Bieten nicht mehr erlaubt
+      await expect(
+        auction.connect(bidder1).bid({ value: ethers.utils.parseEther("0.1") })
+      ).to.be.revertedWith("Auction ended");
 
+      // Only seller may end
       await expect(auction.connect(bidder1).end())
-        .to.be.revertedWith("wrong state");
+        .to.be.revertedWith("Not seller");
 
+      // Seller ends successfully
       await auction.connect(seller).end();
-      expect(await auction.state()).to.equal(1); // Enum State.Ended
+      expect(await auction.state()).to.equal(1); // State.Ended
     });
 
     it("seller can cancel only if no bids", async () => {
@@ -197,7 +190,7 @@ describe("Auction System", function () {
       });
 
       await expect(auction.connect(seller).cancel())
-        .to.be.revertedWith("already bids");
+        .to.be.revertedWith("Already bids");
     });
   });
 });

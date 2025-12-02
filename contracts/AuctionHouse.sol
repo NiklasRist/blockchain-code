@@ -3,8 +3,9 @@ pragma solidity ^0.8.20;
 
 import "./Auction.sol";
 
-/// @title AuctionHouse - erstellt und verwaltet mehrere Auktionen
 contract AuctionHouse {
+
+    // Jede Auction wird sauber gespeichert
     struct AuctionInfo {
         address auctionAddress;
         address seller;
@@ -15,10 +16,7 @@ contract AuctionHouse {
 
     AuctionInfo[] public auctions;
 
-    // simples Subscribe-System
-    mapping(address => bool) public isSubscriber;
-    address[] public subscribers;
-
+    // Events
     event AuctionCreated(
         uint256 indexed auctionId,
         address indexed auctionAddress,
@@ -28,33 +26,35 @@ contract AuctionHouse {
         uint256 endAt
     );
 
-    event Subscribed(address indexed user);
+    event AuctionRemoved(uint256 indexed auctionId);
 
-    /// @notice User tragen sich als "interessiert" ein (für Off-Chain-Notification)
-    function subscribe() external {
-        require(!isSubscriber[msg.sender], "already subscribed");
-        isSubscriber[msg.sender] = true;
-        subscribers.push(msg.sender);
-        emit Subscribed(msg.sender);
-    }
+    // ----------------------------------------------------------
+    // Neue Auktion erstellen
+    // ----------------------------------------------------------
 
-    /// @notice Neue Auktion für ein Item erstellen
     function createAuction(
         string calldata _itemName,
         string calldata _description,
         uint256 _startingPrice,
         uint256 _biddingTime
-    ) external returns (uint256 auctionId, address auctionAddress) {
+    ) external returns (uint256 auctionId, address auctionAddress)
+    {
+        auctionId = auctions.length; // aktuelle Länge = neue ID
+
+        // Auction erzeugen — jetzt mit ID und AuctionHouse-Adresse
         Auction auction = new Auction(
             msg.sender,
             _itemName,
             _description,
             _startingPrice,
-            _biddingTime
+            _biddingTime,
+            auctionId,
+            address(this)
         );
 
         auctionAddress = address(auction);
 
+        // Speichern im Array
         auctions.push(
             AuctionInfo({
                 auctionAddress: auctionAddress,
@@ -64,8 +64,6 @@ contract AuctionHouse {
                 endAt: block.timestamp + _biddingTime
             })
         );
-
-        auctionId = auctions.length - 1;
 
         emit AuctionCreated(
             auctionId,
@@ -77,20 +75,39 @@ contract AuctionHouse {
         );
     }
 
+    // ----------------------------------------------------------
+    // Auction löschen → wird von Auction selbst gerufen
+    // ----------------------------------------------------------
+
+    function removeAuction(uint256 id) external {
+        require(msg.sender == auctions[id].auctionAddress,
+            "Only auction contract may remove itself");
+
+        uint256 lastIndex = auctions.length - 1;
+
+        // Swap-and-pop
+        if (id != lastIndex) {
+            auctions[id] = auctions[lastIndex];
+        }
+
+        auctions.pop();
+        emit AuctionRemoved(id);
+    }
+
+    // ----------------------------------------------------------
+    // Getter
+    // ----------------------------------------------------------
+
     function getAuctionsCount() external view returns (uint256) {
         return auctions.length;
     }
 
-    function getAuction(uint256 _id)
+    function getAuction(uint256 id)
         external
         view
         returns (AuctionInfo memory)
     {
-        require(_id < auctions.length, "invalid id");
-        return auctions[_id];
-    }
-
-    function getSubscribers() external view returns (address[] memory) {
-        return subscribers;
+        require(id < auctions.length, "Invalid auction ID");
+        return auctions[id];
     }
 }

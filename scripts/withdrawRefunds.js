@@ -2,8 +2,8 @@ require("dotenv").config();
 const { ethers } = require("hardhat");
 
 async function main() {
-  const auctionAddress = process.env.AUCTION_ADDRESS;
-  if (!auctionAddress) throw new Error("Missing AUCTION_ADDRESS in .env");
+  const auctionAddress = process.env.AUCTION_0;
+  if (!auctionAddress) throw new Error("Missing AUCTION_0 in .env");
 
   const [_, bidder] = await ethers.getSigners();
 
