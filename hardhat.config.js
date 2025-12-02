@@ -20,6 +20,11 @@ module.exports = {
         process.env.GANACHE_PK1,
         process.env.GANACHE_PK2,
       ]
-    }
+    },
+    sepolia: {
+      url: process.env.SEPOLIA_RPC_URL,
+      accounts: [process.env.SEPOLIA_PRIVATE_KEY],
+      chainId: 11155111,
+    },
   }
 };
